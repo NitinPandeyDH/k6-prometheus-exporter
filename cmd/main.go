@@ -116,7 +116,9 @@ func metricsHandler(resp http.ResponseWriter, req *http.Request) {
 		for sampleName, sampleValue := range metric.Attributes.Sample {
 			sampleName = strings.ReplaceAll(sampleName, "(", "")
 			sampleName = strings.ReplaceAll(sampleName, ")", "")
-			expoResult += fmt.Sprintf("k6_%s_%s{label=\"test\"} %f\n", metricName, sampleName, sampleValue)
+			if !strings.Contains(metricName, "expected_response") && !strings.Contains(sampleName, "expected_response") {
+				expoResult += fmt.Sprintf("k6_%s_%s{label=\"test\"} %f\n", metricName, sampleName, sampleValue)
+			}
 		}
 
 		expoResult += "\n"
